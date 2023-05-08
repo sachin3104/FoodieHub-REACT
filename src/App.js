@@ -8,9 +8,9 @@ function App() {
   const [showModal,setShowModal]=useState(false);
   const onConfirmHandler=()=>{
     if(showModal){
-      setShowModal(true);
-    }else{
       setShowModal(false);
+    }else{
+      setShowModal(true);
     }
   }
   return (

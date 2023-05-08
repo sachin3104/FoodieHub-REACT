@@ -1,11 +1,25 @@
-import React from "react";
+import React,{useState} from "react";
 
 import Header from "./Components/Layout/Header";
+import Meals from "./Components/Meals/Meals";
+import Cart from "./Components/Cart/Cart";
 
 function App() {
+  const [showModal,setShowModal]=useState(false);
+  const onConfirmHandler=()=>{
+    if(showModal){
+      setShowModal(true);
+    }else{
+      setShowModal(false);
+    }
+  }
   return (
     <React.Fragment>
-      <Header />
+      <Cart onConfirm={onConfirmHandler} showModal={showModal}/>
+      <Header onConfirm={onConfirmHandler}/>
+      <main>
+        <Meals/>
+      </main>
     </React.Fragment>
   );
 }

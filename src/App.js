@@ -3,24 +3,26 @@ import React,{useState} from "react";
 import Header from "./Components/Layout/Header";
 import Meals from "./Components/Meals/Meals";
 import Cart from "./Components/Cart/Cart";
+import CartProvider from "./Store/CartProvider";
 
 function App() {
   const [showModal,setShowModal]=useState(false);
-  const onConfirmHandler=()=>{
-    if(showModal){
-      setShowModal(false);
-    }else{
-      setShowModal(true);
-    }
+
+  const hideCardHandler=()=>{
+    setShowModal(false);
   }
+  const showCardHandler=()=>{
+    setShowModal(true);
+  }
+
   return (
-    <React.Fragment>
-      <Cart onConfirm={onConfirmHandler} showModal={showModal}/>
-      <Header onConfirm={onConfirmHandler}/>
+    <CartProvider>
+      <Cart onConfirm={hideCardHandler} showModal={showModal}/>
+      <Header onConfirm={showCardHandler}/>
       <main>
         <Meals/>
       </main>
-    </React.Fragment>
+    </CartProvider>
   );
 }
 

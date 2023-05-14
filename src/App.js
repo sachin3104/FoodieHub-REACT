@@ -17,7 +17,7 @@ function App() {
 
   return (
     <CartProvider>
-      <Cart onConfirm={hideCardHandler} showModal={showModal}/>
+      {showModal&&<Cart onConfirm={hideCardHandler} showModal={showModal}/>}
       <Header onConfirm={showCardHandler}/>
       <main>
         <Meals/>

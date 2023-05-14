@@ -1,21 +1,28 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 
 import Modal from "../UI/Modal";
 import CartItem from "./CartItem";
 import classes from "./Cart.module.css";
 import CartContext from "../../Store/cart-context";
+import Checkout from "./Checkout";
 
 const Cart = (props) => {
+  const [showForm, setShowForm] = useState(false);
+
   const cartCtx = useContext(CartContext);
   const totalPrice = `${cartCtx.totalPrice.toFixed(2)}`;
   const hasItems = cartCtx.items.length > 0;
 
   const cartItemRemoveHandler = (id) => {
-    cartCtx.removeItem(id)
+    cartCtx.removeItem(id);
   };
 
   const cartItemAddHandler = (item) => {
-    cartCtx.addItem({...item,amount:1});
+    cartCtx.addItem({ ...item, amount: 1 });
+  };
+
+  const orderHandler = () => {
+    setShowForm(true);
   };
 
   const cartItems = (
@@ -34,28 +41,30 @@ const Cart = (props) => {
       })}
     </ul>
   );
-  const showModal = props.showModal;
-  return (
-    <React.Fragment>
-      {showModal && (
-        <Modal onConfirm={props.onConfirm}>
-          {cartItems}
-          <div className={classes.total}>
-            <span>Total Amount</span>
-            <span>₹{totalPrice}</span>
-          </div>
-          <div className={classes.actions}>
-            <button
-              className={classes["button--alt"]}
-              onClick={props.onConfirm}
-            >
-              Close
-            </button>
-            {hasItems && <button className={classes.button}>Order</button>}
-          </div>
-        </Modal>
+
+  const modalActions = (
+    <div className={classes.actions}>
+      <button className={classes["button--alt"]} onClick={props.onConfirm}>
+        Close
+      </button>
+      {hasItems && !showForm && (
+        <button className={classes.button} onClick={orderHandler}>
+          Order
+        </button>
       )}
-    </React.Fragment>
+    </div>
+  );
+
+  return (
+    <Modal onConfirm={props.onConfirm}>
+      {cartItems}
+      <div className={classes.total}>
+        <span>Total Amount</span>
+        <span>₹{totalPrice}</span>
+      </div>
+      {showForm && <Checkout onCancel={props.onConfirm} />}
+      {!showForm && modalActions}
+    </Modal>
   );
 };
 

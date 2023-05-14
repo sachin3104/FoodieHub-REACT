@@ -8,6 +8,8 @@ import Checkout from "./Checkout";
 
 const Cart = (props) => {
   const [showForm, setShowForm] = useState(false);
+  const [isSubmiting, setIsSubmiting] = useState(false);
+  const [isSubmited, setIsSubmited] = useState(false);
 
   const cartCtx = useContext(CartContext);
   const totalPrice = `${cartCtx.totalPrice.toFixed(2)}`;
@@ -23,6 +25,23 @@ const Cart = (props) => {
 
   const orderHandler = () => {
     setShowForm(true);
+  };
+
+  const submitDataHandler = (userData) => {
+    setIsSubmiting(true);
+    fetch(
+      "https://react-food-app-backend-default-rtdb.firebaseio.com/orders.json",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          user: userData,
+          orderedItems: cartCtx.items,
+        }),
+      }
+    );
+    setIsSubmiting(false);
+    setIsSubmited(true);
+    cartCtx.clearCart();
   };
 
   const cartItems = (
@@ -55,15 +74,37 @@ const Cart = (props) => {
     </div>
   );
 
-  return (
-    <Modal onConfirm={props.onConfirm}>
+  const modalContent = (
+    <React.Fragment>
       {cartItems}
       <div className={classes.total}>
         <span>Total Amount</span>
         <span>₹{totalPrice}</span>
       </div>
-      {showForm && <Checkout onCancel={props.onConfirm} />}
+      {showForm && (
+        <Checkout onConfirm={submitDataHandler} onCancel={props.onConfirm} />
+      )}
       {!showForm && modalActions}
+    </React.Fragment>
+  );
+
+  const isSubmitingModalData = <p>Placing your Order...</p>;
+  const isSubmitedModalData = (
+    <React.Fragment>
+      <p>Your Order is Placed. Thank You!</p>
+      <div className={classes.actions}>
+      <button className={classes.button} onClick={props.onConfirm}>
+        Close
+      </button>
+    </div>
+    </React.Fragment>
+  );
+
+  return (
+    <Modal onConfirm={props.onConfirm}>
+      {!isSubmiting && !isSubmited && modalContent}
+      {isSubmiting && isSubmitingModalData}
+      {!isSubmiting && isSubmited && isSubmitedModalData}
     </Modal>
   );
 };

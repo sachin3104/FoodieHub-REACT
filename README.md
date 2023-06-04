@@ -12,7 +12,7 @@ Thanks for checking out my project. This is my best project yet.
 
 -You can add any of your favourate food in your cart.
 
--This is not just a webpage with no backend connections your orders will be stored in a backend provided by google firebase.
+-This is a webpage where backend provided by google firebase.
 
 -You will see functional model, from validation, and cool UI in this project.
 
